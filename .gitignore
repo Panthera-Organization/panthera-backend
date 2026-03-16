@@ -1,0 +1,41 @@
+# Node / TypeScript / JavaScript
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+.cache/
+.next/
+out/
+
+# Supabase local artifacts
+supabase/.temp/
+supabase/.branches/
+supabase/.supabase/
+supabase/.env
+supabase/docker/
+supabase/studio/.next/
+supabase/studio/node_modules/
+
+# TODO Check if we need to ignore this
+supabase/config.toml
+
+# Env & secrets (keep config.toml tracked)
+.env
+.env.*.local
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+supabase/signing_keys.json
+supabase/**/secrets.*
+supabase/**/private-keys.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
