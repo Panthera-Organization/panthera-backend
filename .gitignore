@@ -19,9 +19,6 @@ supabase/docker/
 supabase/studio/.next/
 supabase/studio/node_modules/
 
-# TODO Check if we need to ignore this
-supabase/config.toml
-
 # Env & secrets (keep config.toml tracked)
 .env
 .env.*.local
