@@ -1,5 +1,3 @@
-<!-- CONFIDENTIAL. Lives in .audit/ (gitignored). Never commit this report, paste it into an issue or PR, or share it publicly — including after every finding is fixed. -->
-
 # RLS audit — <date>
 
 ## Summary
