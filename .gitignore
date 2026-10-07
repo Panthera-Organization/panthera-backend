@@ -39,3 +39,7 @@ Thumbs.db
 
 # cursor
 .cursor
+
+# Local RLS audit output: open findings and failing exploit tests.
+# The rls-audit skill writes here. Do not commit it; the repo may become public.
+.audit/
