@@ -47,6 +47,7 @@ Ordinary `security invoker` functions (the Postgres default), such as `submit_an
 
 | Path | Kind | Grants to | What it allows beyond RLS | Approved |
 |---|---|---|---|---|
-| `public.preview_invite(code)` | DB function | `anon`, `authenticated` | Shows company and teacher name for a valid invite code to a non-member | <date> |
-| `public.redeem_invite(code)` | DB function | `authenticated` | Creates the caller's membership and teacher link from a valid invite | <date> |
+| `public.handle_new_user()` | Trigger on `auth.users` | none (revoked from `public`, `anon`, `authenticated`) | Inserts a `profiles` row for the new auth user. No company and no role | 2026-10-07 |
+| `public.preview_invite(code)` | DB function | `anon`, `authenticated` | Shows company and teacher name for a valid invite code to a non-member | 2026-10-07 |
+| `public.redeem_invite(code)` | DB function | `authenticated` | Creates the caller's membership and teacher link from a valid invite | 2026-10-07 |
 | `delete-account` | Edge Function (service role) | `authenticated` (own account only) | Deletes the caller's auth user via the admin API | <date> |
