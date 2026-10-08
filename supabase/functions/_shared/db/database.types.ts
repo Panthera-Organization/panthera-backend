@@ -27,6 +27,7 @@ export type Database = {
                   Row: {
                     "answer_id": string,"company_id": string,"created_at": string,"id": string,"position": number,"storage_path": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "answer_id": string,"company_id": string,"created_at"?: string,"id"?: string,"position"?: number,"storage_path": string
                   }
@@ -46,6 +47,7 @@ isOneToOne: false
                   Row: {
                     "answer_id": string,"comment": string | null,"company_id": string,"created_at": string,"id": string,"reviewer_id": string | null,"updated_at": string,"verdict": Database["public"]['Enums']["review_verdict"]
                   }
+                  ComputedFields: never
                   Insert: {
                     "answer_id": string,"comment"?: string | null,"company_id": string,"created_at"?: string,"id"?: string,"reviewer_id"?: string | null,"updated_at"?: string,"verdict": Database["public"]['Enums']["review_verdict"]
                   }
@@ -71,6 +73,7 @@ isOneToOne: false
                   Row: {
                     "assignment_id": string,"attempt_no": number,"body": string,"company_id": string,"created_at": string,"exercise_id": string,"id": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "assignment_id": string,"attempt_no": number,"body"?: string,"company_id": string,"created_at"?: string,"exercise_id": string,"id"?: string,"updated_at"?: string
                   }
@@ -96,6 +99,7 @@ isOneToOne: false
                   Row: {
                     "assignment_id": string,"attempt_no": number,"company_id": string,"created_at": string,"id": string,"outcome": Database["public"]['Enums']["submission_outcome"] | null,"outcome_at": string | null,"reviewed_by": string | null,"submitted_at": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "assignment_id": string,"attempt_no": number,"company_id": string,"created_at"?: string,"id"?: string,"outcome"?: Database["public"]['Enums']["submission_outcome"] | null,"outcome_at"?: string | null,"reviewed_by"?: string | null,"submitted_at"?: string,"updated_at"?: string
                   }
@@ -121,6 +125,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"current_attempt": number,"due_at_override": string | null,"homework_id": string,"id": string,"reviewed_at": string | null,"started_at": string | null,"status": Database["public"]['Enums']["assignment_status"],"student_id": string,"submitted_at": string | null,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"current_attempt"?: number,"due_at_override"?: string | null,"homework_id": string,"id"?: string,"reviewed_at"?: string | null,"started_at"?: string | null,"status"?: Database["public"]['Enums']["assignment_status"],"student_id": string,"submitted_at"?: string | null,"updated_at"?: string
                   }
@@ -146,6 +151,7 @@ isOneToOne: false
                   Row: {
                     "created_at": string,"created_by": string | null,"id": string,"is_personal": boolean,"name": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "created_at"?: string,"created_by"?: string | null,"id"?: string,"is_personal"?: boolean,"name": string,"updated_at"?: string
                   }
@@ -165,6 +171,7 @@ isOneToOne: false
                   Row: {
                     "attendance": Database["public"]['Enums']["attendance_status"] | null,"company_id": string,"created_at": string,"event_id": string,"id": string,"role": Database["public"]['Enums']["participant_role"],"updated_at": string,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "attendance"?: Database["public"]['Enums']["attendance_status"] | null,"company_id": string,"created_at"?: string,"event_id": string,"id"?: string,"role": Database["public"]['Enums']["participant_role"],"updated_at"?: string,"user_id": string
                   }
@@ -190,6 +197,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"created_by": string | null,"id": string,"is_default": boolean,"name": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"is_default"?: boolean,"name": string,"updated_at"?: string
                   }
@@ -215,6 +223,7 @@ isOneToOne: false
                   Row: {
                     "cancelled_at": string | null,"company_id": string,"created_at": string,"created_by": string | null,"description": string | null,"ends_at": string,"event_type_id": string,"id": string,"is_detached": boolean,"location": string | null,"meeting_url": string | null,"original_starts_at": string | null,"series_id": string | null,"source_group_id": string | null,"starts_at": string,"status": Database["public"]['Enums']["event_status"],"title": string | null,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "cancelled_at"?: string | null,"company_id": string,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"ends_at": string,"event_type_id": string,"id"?: string,"is_detached"?: boolean,"location"?: string | null,"meeting_url"?: string | null,"original_starts_at"?: string | null,"series_id"?: string | null,"source_group_id"?: string | null,"starts_at": string,"status"?: Database["public"]['Enums']["event_status"],"title"?: string | null,"updated_at"?: string
                   }
@@ -258,6 +267,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"position": number,"storage_path": string,"template_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"position"?: number,"storage_path": string,"template_id": string
                   }
@@ -277,6 +287,7 @@ isOneToOne: false
                   Row: {
                     "author_id": string | null,"company_id": string,"created_at": string,"description": string,"id": string,"level_id": string | null,"school_class_id": string | null,"updated_at": string,"visibility": Database["public"]['Enums']["visibility"]
                   }
+                  ComputedFields: never
                   Insert: {
                     "author_id"?: string | null,"company_id": string,"created_at"?: string,"description": string,"id"?: string,"level_id"?: string | null,"school_class_id"?: string | null,"updated_at"?: string,"visibility"?: Database["public"]['Enums']["visibility"]
                   }
@@ -314,6 +325,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"group_id": string,"student_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"group_id": string,"student_id": string
                   }
@@ -339,6 +351,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"group_id": string,"teacher_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"group_id": string,"teacher_id": string
                   }
@@ -364,6 +377,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"created_by": string | null,"id": string,"name": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"created_by"?: string | null,"id"?: string,"name": string,"updated_at"?: string
                   }
@@ -389,6 +403,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"exercise_id": string,"id": string,"position": number,"storage_path": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"exercise_id": string,"id"?: string,"position"?: number,"storage_path": string
                   }
@@ -408,6 +423,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"description": string,"homework_id": string,"id": string,"position": number,"source_template_id": string | null,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"description": string,"homework_id": string,"id"?: string,"position"?: number,"source_template_id"?: string | null,"updated_at"?: string
                   }
@@ -433,6 +449,7 @@ isOneToOne: false
                   Row: {
                     "author_id": string | null,"company_id": string,"created_at": string,"created_by": string | null,"description": string | null,"due_at": string,"event_id": string | null,"id": string,"source_group_id": string | null,"title": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "author_id"?: string | null,"company_id": string,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"due_at": string,"event_id"?: string | null,"id"?: string,"source_group_id"?: string | null,"title": string,"updated_at"?: string
                   }
@@ -476,6 +493,7 @@ isOneToOne: false
                   Row: {
                     "attempted_at": string,"id": number,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "attempted_at"?: string,"id"?: never,"user_id": string
                   }
@@ -495,6 +513,7 @@ isOneToOne: false
                   Row: {
                     "id": string,"invite_id": string,"redeemed_at": string,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "id"?: string,"invite_id": string,"redeemed_at"?: string,"user_id": string
                   }
@@ -520,6 +539,7 @@ isOneToOne: false
                   Row: {
                     "code": string,"company_id": string,"created_at": string,"created_by": string,"expires_at": string,"id": string,"max_uses": number,"payload": NonNullable<Json>,"revoked_at": string | null,"role": Database["public"]['Enums']["member_role"],"updated_at": string,"use_count": number
                   }
+                  ComputedFields: never
                   Insert: {
                     "code"?: string,"company_id": string,"created_at"?: string,"created_by": string,"expires_at": string,"id"?: string,"max_uses"?: number,"payload"?: NonNullable<Json>,"revoked_at"?: string | null,"role"?: Database["public"]['Enums']["member_role"],"updated_at"?: string,"use_count"?: number
                   }
@@ -545,6 +565,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"created_by": string | null,"description": string | null,"duration": string,"event_type_id": string,"first_starts_at": string,"id": string,"last_starts_at": string,"location": string | null,"meeting_url": string | null,"rrule": string,"source_group_id": string | null,"split_from_series_id": string | null,"timezone": string,"title": string | null,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"duration": string,"event_type_id": string,"first_starts_at": string,"id"?: string,"last_starts_at": string,"location"?: string | null,"meeting_url"?: string | null,"rrule": string,"source_group_id"?: string | null,"split_from_series_id"?: string | null,"timezone": string,"title"?: string | null,"updated_at"?: string
                   }
@@ -588,6 +609,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"role": Database["public"]['Enums']["participant_role"],"series_id": string,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"role": Database["public"]['Enums']["participant_role"],"series_id": string,"user_id": string
                   }
@@ -613,6 +635,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"name": string,"position": number,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"name": string,"position"?: number,"updated_at"?: string
                   }
@@ -632,6 +655,7 @@ isOneToOne: false
                   Row: {
                     "can_teach": boolean,"company_id": string,"created_at": string,"id": string,"role": Database["public"]['Enums']["member_role"],"updated_at": string,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "can_teach"?: boolean,"company_id": string,"created_at"?: string,"id"?: string,"role": Database["public"]['Enums']["member_role"],"updated_at"?: string,"user_id": string
                   }
@@ -657,6 +681,7 @@ isOneToOne: false
                   Row: {
                     "author_id": string | null,"body": string,"company_id": string,"created_at": string,"event_id": string | null,"homework_id": string | null,"id": string,"source_group_id": string | null,"source_note_id": string | null,"title": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "author_id"?: string | null,"body"?: string,"company_id": string,"created_at"?: string,"event_id"?: string | null,"homework_id"?: string | null,"id"?: string,"source_group_id"?: string | null,"source_note_id"?: string | null,"title": string,"updated_at"?: string
                   }
@@ -706,6 +731,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"note_copy_id": string,"position": number,"storage_path": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"note_copy_id": string,"position"?: number,"storage_path": string
                   }
@@ -725,6 +751,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"note_copy_id": string,"student_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"note_copy_id": string,"student_id": string
                   }
@@ -750,6 +777,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"note_id": string,"position": number,"storage_path": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"note_id": string,"position"?: number,"storage_path": string
                   }
@@ -769,6 +797,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"note_id": string,"tag_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"note_id": string,"tag_id": string
                   }
@@ -794,6 +823,7 @@ isOneToOne: false
                   Row: {
                     "author_id": string | null,"body": string,"company_id": string,"created_at": string,"id": string,"level_id": string | null,"school_class_id": string | null,"title": string,"updated_at": string,"visibility": Database["public"]['Enums']["visibility"]
                   }
+                  ComputedFields: never
                   Insert: {
                     "author_id"?: string | null,"body"?: string,"company_id": string,"created_at"?: string,"id"?: string,"level_id"?: string | null,"school_class_id"?: string | null,"title": string,"updated_at"?: string,"visibility"?: Database["public"]['Enums']["visibility"]
                   }
@@ -831,6 +861,7 @@ isOneToOne: false
                   Row: {
                     "avatar_path": string | null,"created_at": string,"full_name": string,"id": string,"timezone": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "avatar_path"?: string | null,"created_at"?: string,"full_name"?: string,"id": string,"timezone"?: string,"updated_at"?: string
                   }
@@ -844,6 +875,7 @@ isOneToOne: false
                   Row: {
                     "created_at": string,"id": string,"platform": Database["public"]['Enums']["push_platform"],"token": string,"updated_at": string,"user_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "created_at"?: string,"id"?: string,"platform": Database["public"]['Enums']["push_platform"],"token": string,"updated_at"?: string,"user_id": string
                   }
@@ -863,6 +895,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"name": string,"position": number,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"name": string,"position"?: number,"updated_at"?: string
                   }
@@ -882,6 +915,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"name": string,"owner_id": string | null,"updated_at": string,"visibility": Database["public"]['Enums']["visibility"]
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"name": string,"owner_id"?: string | null,"updated_at"?: string,"visibility"?: Database["public"]['Enums']["visibility"]
                   }
@@ -907,6 +941,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"id": string,"is_direct": boolean,"student_id": string,"teacher_id": string,"updated_at": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"id"?: string,"is_direct"?: boolean,"student_id": string,"teacher_id": string,"updated_at"?: string
                   }
@@ -932,6 +967,7 @@ isOneToOne: false
                   Row: {
                     "company_id": string,"created_at": string,"tag_id": string,"template_id": string
                   }
+                  ComputedFields: never
                   Insert: {
                     "company_id": string,"created_at"?: string,"tag_id": string,"template_id": string
                   }

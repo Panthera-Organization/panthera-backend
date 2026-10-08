@@ -1,0 +1,50 @@
+name: Backend checks
+description: Reset the local database, lint migrations, run pgTAP, and type-check.
+
+runs:
+  using: composite
+  steps:
+    - uses: supabase/setup-cli@v1
+      with:
+        version: 2.120.0
+
+    - uses: denoland/setup-deno@v2
+      with:
+        deno-version: 2.9.7
+
+    - name: Start local stack
+      shell: bash
+      run: supabase start
+
+    - name: Reset database from migrations
+      shell: bash
+      run: supabase db reset --yes
+
+    - name: Lint migrations
+      shell: bash
+      run: supabase db lint --local --fail-on error
+
+    - name: Run pgTAP
+      shell: bash
+      run: supabase test db --local
+
+    - name: Check generated database types
+      shell: bash
+      run: |
+        supabase gen types typescript --local > /tmp/database.types.ts
+        diff -u supabase/functions/_shared/db/database.types.ts /tmp/database.types.ts
+
+    - name: Type-check functions
+      shell: bash
+      run: |
+        mapfile -t files < <(find supabase/functions -name '*.ts' | sort)
+        if [ "${#files[@]}" -eq 0 ]; then
+          echo "No TypeScript files under supabase/functions"
+          exit 1
+        fi
+        deno check "${files[@]}"
+
+    - name: Stop local stack
+      if: always()
+      shell: bash
+      run: supabase stop --no-backup || true
