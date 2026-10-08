@@ -13,8 +13,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  scope:
+    name: scope
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.scope.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect database and function changes
+        id: scope
+        run: |
+          before="${{ github.event.before }}"
+          if [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(git diff --name-only "$before" "${{ github.sha }}")
+          printf '%s\n' "$files"
+          if printf '%s\n' "$files" | bash .github/stack-changes.sh; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
   backend:
     name: backend
+    needs: scope
+    if: needs.scope.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -23,7 +51,8 @@ jobs:
 
   deploy:
     name: deploy
-    needs: backend
+    needs: [scope, backend]
+    if: needs.scope.outputs.run == 'true' && needs.backend.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -40,6 +69,8 @@ jobs:
       - name: Link staging
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --yes
 
+      # Staging can pause after a week of inactivity. Restore the project
+      # in the Supabase dashboard, then re-run this workflow.
       - name: Push migrations
         run: supabase db push --yes
 
