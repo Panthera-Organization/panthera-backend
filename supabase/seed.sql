@@ -1,0 +1,2 @@
+-- Local seed data is loaded by `supabase db reset`.
+-- PB-53 fills this file with a tutoring center and a personal workspace.
