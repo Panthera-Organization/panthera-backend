@@ -70,7 +70,7 @@ select throws_ok(
        (select participants from fx)
      ) $$,
   '22023',
-  null,
+  'split point must be after the first occurrence; edit the whole series instead',
   'the split point must be after the first occurrence'
 );
 

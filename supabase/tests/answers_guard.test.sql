@@ -1,7 +1,7 @@
 -- Answer guard, including a later attempt after review. Service role until RLS policies exist.
 
 begin;
-select plan(6);
+select plan(7);
 
 create temp table fx (
   teacher_id       uuid,
@@ -108,12 +108,19 @@ select answer2_id, company_id, 'incorrect'::public.review_verdict from fx;
 
 update public.assignments set status = 'returned' where id = (select assignment_id from fx);
 
+select is(
+  (select current_attempt from public.assignments
+    where id = (select assignment_id from fx)),
+  2::smallint,
+  'a return makes attempt 2 the current attempt'
+);
+
 select throws_ok(
   $$ insert into public.answers (assignment_id, company_id, exercise_id, attempt_no, body)
      select assignment_id, company_id, exercise1_id, 2::smallint, 'again'
        from fx $$,
   '42501',
-  null,
+  'this exercise was already marked correct',
   'an exercise marked correct cannot be answered again'
 );
 
