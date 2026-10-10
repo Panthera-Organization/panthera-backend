@@ -4,7 +4,7 @@ description: Reset the local database, lint migrations, run pgTAP, and type-chec
 runs:
   using: composite
   steps:
-    - uses: supabase/setup-cli@v1
+    - uses: supabase/setup-cli@v3
       with:
         version: 2.120.0
 
