@@ -44,6 +44,10 @@ runs:
         fi
         deno check "${files[@]}"
 
+    - name: Test the Postgres error map
+      shell: bash
+      run: deno test supabase/functions/_shared/graphql/mapPostgresError.test.ts
+
     - name: Stop local stack
       if: always()
       shell: bash
