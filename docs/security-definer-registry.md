@@ -25,7 +25,7 @@ Adding a helper that meets every criterion doesn't need prior approval, but it m
 
 Performs an action, or returns data, beyond what the caller's RLS rights allow. These are deliberate exceptions to the security model.
 
-- **Requires the user's explicit approval before it's written.** Record the approval date below.
+- **Requires the user's explicit approval before it's written.** Record the approval date below. Do not write a privileged path that has no row in this file.
 - Database functions live in `public` (called through `rpc` from Yoga). Service-role code lives in a dedicated Edge Function, never in Yoga.
 - Identifies the caller only through `(select auth.uid())`, and validates every argument against it.
 - `set search_path = ''`, fully qualified table names, explicit grants (`authenticated`, plus `anon` only when stated below).
@@ -38,16 +38,12 @@ Ordinary `security invoker` functions (the Postgres default), such as `submit_an
 
 ### RLS helpers
 
-| Function | Purpose | Added |
-|---|---|---|
-| `private.is_member(company_id, roles[])` | Is the caller a member of the company with one of these roles? | <date> |
-| `private.teaches(student_id)` | Does the caller teach this student (in any shared company)? | <date> |
+No RLS helper exists yet. The auth phase adds `is_member(company, roles[])`, `can_teach(company)`, `teaches(company, student)`, and `shares_event_with(user)`. Add a row here when you write each helper. Columns: function, purpose, added.
 
 ### Privileged paths
 
-| Path | Kind | Grants to | What it allows beyond RLS | Approved |
-|---|---|---|---|---|
-| `public.handle_new_user()` | Trigger on `auth.users` | none (revoked from `public`, `anon`, `authenticated`) | Inserts a `profiles` row for the new auth user. No company and no role | 2026-10-07 |
-| `public.preview_invite(code)` | DB function | `anon`, `authenticated` | Shows company and teacher name for a valid invite code to a non-member | 2026-10-07 |
-| `public.redeem_invite(code)` | DB function | `authenticated` | Creates the caller's membership and teacher link from a valid invite | 2026-10-07 |
-| `delete-account` | Edge Function (service role) | `authenticated` (own account only) | Deletes the caller's auth user via the admin API | <date> |
+| Path | Kind | Who can call it | Why it is definer | What it allows beyond RLS | Approved |
+|---|---|---|---|---|---|
+| `public.handle_new_user()` | Trigger on `auth.users` | Nobody through the API. Execute is revoked from `public`, `anon`, and `authenticated`. The trigger runs it. | The auth role cannot insert into `public.profiles`. The function runs as its owner so the profile row can be inserted. | Inserts a `profiles` row for the new auth user. No company and no role. | 2026-10-07 |
+| `public.preview_invite(code)` | DB function | `anon` and `authenticated` | A non-member cannot read `companies`, `profiles`, or `invites` under row policies. | Returns the company name, the inviter name, and the role for a code that is still valid. | 2026-10-07 |
+| `public.redeem_invite(code)` | DB function | `authenticated` | The caller is not a member yet, so row policies would block the membership, the teacher link, the group rows, and the invite bookkeeping. | Creates the caller's membership when needed, links the inviting teacher, adds the invite's groups, and records the redemption. A failed guess is stored so the rate limit of 10 invalid codes per hour can commit. | 2026-10-07 |
