@@ -45,7 +45,7 @@ Compare the planned change with those documents. Check at least:
 - Whether a partial write is allowed, or the write must be one invoker RPC
 - Realtime publication, Storage paths, and grants
 
-A new privileged path that has no registry row is a conflict. Do not write it before the user approves it.
+A new privileged path with no row breaks the rule in `docs/security-definer-registry.md`. Treat that as a conflict.
 
 ## No conflict
 
@@ -63,4 +63,4 @@ Effects if we do it: <what breaks, what becomes possible, what later phase chang
 Do you approve this change?
 ```
 
-Wait for the answer. On approval, follow the approved side and update the documents the user names. On refusal, keep the documents and change the plan.
+Wait for the answer. When the approval adds or changes a privileged path, add the row to `docs/security-definer-registry.md` and to the Linear registry document in that same change. Write the function only after both copies contain the row. For any other approval, follow the approved side and update each fetched document that the decision changes. On refusal, keep the documents and change the plan.

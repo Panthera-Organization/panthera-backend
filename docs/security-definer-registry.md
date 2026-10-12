@@ -2,8 +2,6 @@
 
 The single list of every function that runs with more privileges than its caller. The `add-table`, `add-graphql-field` and `rls-audit` skills all read this file; none of them keeps its own list.
 
-Closed product decisions, the implementation plan, and this registry are documents on the Linear project [Shared references](https://linear.app/pantheraapp/project/shared-references-d6e373a89bd9). That project belongs to Panthera Backend and Panthera App. Fetch them there: [Database decisions](https://linear.app/pantheraapp/document/database-decisions-bf7e0d25fc26), [Implementation plan](https://linear.app/pantheraapp/document/implementation-plan-0f71340f0180), and [Security definer registry](https://linear.app/pantheraapp/document/security-definer-registry-aacfd6bfe262). The skills read this file in the repo. Update this file and the Linear document together when you add a row. Do not copy the decisions or the plan into this repo.
-
 **Rule:** every `security definer` function in the database, and every Edge Function using the service role, appears here. Anything missing from this file is an audit finding.
 
 ## Classes
