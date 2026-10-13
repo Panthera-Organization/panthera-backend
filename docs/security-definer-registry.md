@@ -38,7 +38,13 @@ Ordinary `security invoker` functions (the Postgres default), such as `submit_an
 
 ### RLS helpers
 
-No RLS helper exists yet. The auth phase adds `is_member(company, roles[])`, `can_teach(company)`, `teaches(company, student)`, and `shares_event_with(user)`. Add a row here when you write each helper. Columns: function, purpose, added.
+| Function | Purpose | Added |
+|---|---|---|
+| `private.is_member(company, roles[])` | Caller has one of those roles in that company. | 2026-10-13 |
+| `private.can_teach(company)` | Caller has `can_teach` in that company. | 2026-10-13 |
+| `private.teaches(company, student)` | Caller teaches that student in that company. | 2026-10-13 |
+| `private.shares_event_with(user)` | Caller and that user share an event, including a cancelled event. | 2026-10-13 |
+| `private.shares_roster_with(user)` | A `teacher_students` row links the caller and that user, in either direction. | 2026-10-13 |
 
 ### Privileged paths
 

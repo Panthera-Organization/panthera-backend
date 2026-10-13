@@ -1,4 +1,5 @@
--- Last-owner protection and personal-company deletion. Service role until RLS policies exist.
+-- Last-owner protection and personal-company deletion.
+-- Service role bypasses RLS. This file keeps the membership-delete path.
 
 begin;
 select plan(5);
