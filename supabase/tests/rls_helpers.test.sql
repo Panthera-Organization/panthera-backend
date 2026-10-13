@@ -66,7 +66,7 @@ select ok(
   (select qual like '%is_member%'
      from pg_policies
     where schemaname = 'public'
-      and policyname = 'memberships: self, staff, or teacher reads'),
+      and policyname = 'memberships: self, owner, admin, or teacher reads'),
   'memberships select calls is_member'
 );
 
@@ -74,7 +74,7 @@ select ok(
   (select qual like '%teaches%'
      from pg_policies
     where schemaname = 'public'
-      and policyname = 'memberships: self, staff, or teacher reads'),
+      and policyname = 'memberships: self, owner, admin, or teacher reads'),
   'memberships select calls teaches'
 );
 
@@ -90,7 +90,7 @@ select ok(
   (select with_check like '%is_member%'
      from pg_policies
     where schemaname = 'public'
-      and policyname = 'event_types: staff insert'),
+      and policyname = 'event_types: owner, admin, or teacher insert'),
   'event type insert calls is_member'
 );
 

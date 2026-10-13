@@ -175,6 +175,8 @@ create trigger companies_mark_deleting
   before delete on public.companies
   for each row execute function private.trg_companies_mark_deleting();
 
+-- Invoker trigger, not an RLS helper. Postgres runs it on delete without a
+-- grant to authenticated. A direct call stays revoked.
 revoke execute on function private.trg_companies_mark_deleting() from public, anon;
 
 create or replace function private.trg_memberships_delete_personal_company()
@@ -243,7 +245,7 @@ create policy "companies: owner deletes personal"
     and private.is_member(id, array['owner']::public.member_role[])
   );
 
-create policy "memberships: self, staff, or teacher reads"
+create policy "memberships: self, owner, admin, or teacher reads"
   on public.memberships for select to authenticated
   using (
     user_id = (select auth.uid())
@@ -272,7 +274,7 @@ create policy "event_types: members read"
     private.is_member(company_id, array['owner', 'admin', 'teacher', 'student']::public.member_role[])
   );
 
-create policy "event_types: staff insert"
+create policy "event_types: owner, admin, or teacher insert"
   on public.event_types for insert to authenticated
   with check (
     created_by = (select auth.uid())

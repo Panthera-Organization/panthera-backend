@@ -9,7 +9,7 @@ create temp table fx (
   teacher_id  uuid,
   student_a   uuid,
   student_b   uuid,
-  student_d   uuid,
+  unlinked_id uuid,
   stranger_id uuid,
   company_a   uuid,
   company_b   uuid,
@@ -19,7 +19,7 @@ create temp table fx (
 grant all on table fx to anon, authenticated;
 
 insert into fx (
-  owner_id, admin_id, teacher_id, student_a, student_b, student_d, stranger_id,
+  owner_id, admin_id, teacher_id, student_a, student_b, unlinked_id, stranger_id,
   company_a, company_b
 ) values (
   tests.create_user('profile-owner@pgtap.panthera.local', 'Owner'),
@@ -27,7 +27,7 @@ insert into fx (
   tests.create_user('profile-teacher@pgtap.panthera.local', 'Teacher'),
   tests.create_user('profile-student-a@pgtap.panthera.local', 'Student A'),
   tests.create_user('profile-student-b@pgtap.panthera.local', 'Student B'),
-  tests.create_user('profile-student-d@pgtap.panthera.local', 'Student D'),
+  tests.create_user('profile-unlinked@pgtap.panthera.local', 'Unlinked'),
   tests.create_user('profile-stranger@pgtap.panthera.local', 'Stranger'),
   gen_random_uuid(),
   gen_random_uuid()
@@ -49,7 +49,7 @@ select company_a, student_a, 'student'::public.member_role, false from fx
 union all
 select company_a, student_b, 'student'::public.member_role, false from fx
 union all
-select company_a, student_d, 'student'::public.member_role, false from fx
+select company_a, unlinked_id, 'student'::public.member_role, false from fx
 union all
 select company_b, stranger_id, 'owner'::public.member_role, true from fx;
 
@@ -123,7 +123,7 @@ select is(
 );
 
 select is_empty(
-  $$ select 1 from public.profiles where id = (select student_d from fx) $$,
+  $$ select 1 from public.profiles where id = (select unlinked_id from fx) $$,
   'a student cannot read an unlinked student profile'
 );
 

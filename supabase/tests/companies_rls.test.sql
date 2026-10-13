@@ -1,7 +1,7 @@
 -- Company read, personal-workspace create, rename, and personal delete.
 
 begin;
-select plan(24);
+select plan(26);
 
 create temp table fx (
   owner_id  uuid,
@@ -184,6 +184,21 @@ insert into public.memberships (company_id, user_id, role, can_teach)
 select w.company_id, p.id, 'student'::public.member_role, false
   from created_workspace w
   cross join pupil p;
+
+select tests.authenticate_as((select id from pupil));
+select lives_ok(
+  $$ delete from public.companies
+      where id = (select company_id from created_workspace) $$,
+  'a student delete of a personal company does not raise'
+);
+reset role;
+
+select is(
+  (select count(*)::int from public.companies
+    where id = (select company_id from created_workspace)),
+  1,
+  'a student cannot delete a personal company'
+);
 
 select tests.authenticate_as((select student_id from fx));
 select lives_ok(
