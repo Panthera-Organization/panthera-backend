@@ -147,7 +147,8 @@ select results_eq(
 
 select is(
   (select can_teach from public.memberships
-    where user_id = (select student_id from fx) and role = 'owner'),
+    where company_id = (select company_id from student_workspace)
+      and user_id = (select student_id from fx)),
   true,
   'the student workspace owner can teach'
 );
