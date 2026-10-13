@@ -30,7 +30,12 @@ create policy "homeworks: author updates"
 - **`to authenticated`** on every policy. Grant `anon` only when the access matrix says so.
 - **`with check` on every insert and update.** Without it, a user could change `company_id` and move a row into another tenant, or set `created_by` to someone else.
 - **`(select auth.uid())`, not `auth.uid()`.** Postgres then evaluates it once per query instead of once per row.
-- **Use the helpers** `private.is_member(company_id, roles[])` and `private.teaches(student_id)` instead of repeating membership subqueries.
+- **Use the helpers** instead of a repeated membership subquery. The caller is always `(select auth.uid())`. A helper does not take the caller's id.
+  - `private.is_member(company_id, roles[])`
+  - `private.can_teach(company_id)` — true for a teacher, and for an owner or admin only when `can_teach` is set.
+  - `private.teaches(company_id, student_id)` — the caller teaches that student in that company. A link in one company does not apply in another.
+  - `private.shares_event_with(user_id)` — the caller and that user share an event.
+  - `private.shares_roster_with(user_id)` — a `teacher_students` row links the caller and that user, in either direction.
 - **Omitted operations are denied.** No delete policy for students means students can't delete. That's intentional.
 
 ## Writing an RLS helper
