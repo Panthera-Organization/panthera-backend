@@ -73,7 +73,6 @@ export const resolvers: Resolvers = {
         .single()
       if (error) throwMapped(error)
       if (!data) throwClientError("INTERNAL")
-      ctx.loaders.profileById.clear(userId).prime(userId, data)
       return data
     },
 
