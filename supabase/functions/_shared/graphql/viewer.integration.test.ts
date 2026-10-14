@@ -75,10 +75,6 @@ async function execute<T>(
   return response.json()
 }
 
-function run(token: string | null, query: string): Promise<ViewerPayload> {
-  return execute(token, query)
-}
-
 function assertErrorCode(body: GraphqlBody<unknown>, code: string) {
   assertEquals(body.errors?.length, 1)
   assertEquals(body.errors?.[0]?.message, "Request failed.")
@@ -110,13 +106,13 @@ async function createWorkspace(token: string, name: string): Promise<void> {
 }
 
 Deno.test("a missing token resolves viewer to null", async () => {
-  const body = await run(null, VIEWER)
+  const body = await execute<{ viewer: Viewer | null }>(null, VIEWER)
   assertEquals(body.errors, undefined)
   assertEquals(body.data?.viewer, null)
 })
 
 Deno.test("an invalid token resolves viewer to null", async () => {
-  const body = await run("not-a-token", VIEWER)
+  const body = await execute<{ viewer: Viewer | null }>("not-a-token", VIEWER)
   assertEquals(body.errors, undefined)
   assertEquals(body.data?.viewer, null)
 })
@@ -133,7 +129,7 @@ Deno.test("the edge function path resolves viewer", async () => {
 })
 
 Deno.test("an unknown field is rejected", async () => {
-  const body = await run(null, "query { viewer { missingField } }")
+  const body = await execute<{ viewer: Viewer | null }>(null, "query { viewer { missingField } }")
   assertEquals(body.data, undefined)
   if (!body.errors?.length) throw new Error("Expected a validation error")
 })
@@ -144,8 +140,8 @@ Deno.test("a user sees only their own company", async () => {
   await createWorkspace(ada, "Alpha Studio")
   await createWorkspace(bea, "Beta Studio")
 
-  const adaBody = await run(ada, VIEWER)
-  const beaBody = await run(bea, VIEWER)
+  const adaBody = await execute<{ viewer: Viewer | null }>(ada, VIEWER)
+  const beaBody = await execute<{ viewer: Viewer | null }>(bea, VIEWER)
   const adaViewer = adaBody.data?.viewer
   const beaViewer = beaBody.data?.viewer
   if (!adaViewer || !beaViewer) throw new Error("Expected both viewers")
@@ -169,7 +165,7 @@ Deno.test("a user sees only their own company", async () => {
 
 Deno.test("a new user has no company", async () => {
   const token = await signUp("Ada Alpha")
-  const body = await run(token, VIEWER)
+  const body = await execute<{ viewer: Viewer | null }>(token, VIEWER)
   assertEquals(body.errors, undefined)
   assertEquals(body.data?.viewer?.memberships, [])
   assertEquals(body.data?.viewer?.profile.timezone, "Europe/Warsaw")
@@ -216,7 +212,7 @@ Deno.test("updateProfile leaves another user's profile unchanged", async () => {
   })
   assertEquals(updated.errors, undefined)
 
-  const beaBody = await run(bea, VIEWER)
+  const beaBody = await execute<{ viewer: Viewer | null }>(bea, VIEWER)
   assertEquals(beaBody.data?.viewer?.fullName, "Bea Beta")
   assertEquals(beaBody.data?.viewer?.profile.timezone, "Europe/Warsaw")
 })
@@ -234,7 +230,7 @@ Deno.test("an unknown timezone is rejected and the profile stays unchanged", asy
   const body = await execute(token, UPDATE_PROFILE, { input: { timezone: "Not/AZone" } })
   assertErrorCode(body, "CHECK_FAILED")
 
-  const viewer = await run(token, VIEWER)
+  const viewer = await execute<{ viewer: Viewer | null }>(token, VIEWER)
   assertEquals(viewer.data?.viewer?.profile.timezone, "Europe/Warsaw")
   assertEquals(viewer.data?.viewer?.fullName, "Ada Alpha")
 })

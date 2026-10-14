@@ -1,12 +1,6 @@
 import DataLoader from "dataloader"
-import { GraphQLError } from "graphql"
-import { mapPostgresError } from "./mapPostgresError.ts"
+import { throwMapped } from "./throwMapped.ts"
 import type { CompanyRow, MembershipRow, ProfileRow, UserClient } from "./rows.ts"
-
-function throwMapped(error: { code?: string }): never {
-  const mapped = mapPostgresError(error.code ?? "")
-  throw new GraphQLError(mapped.message, { extensions: mapped.extensions })
-}
 
 export type Loaders = {
   profileById: DataLoader<string, ProfileRow | null>

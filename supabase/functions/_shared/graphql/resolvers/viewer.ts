@@ -1,7 +1,8 @@
 import { GraphQLError } from "graphql"
 import type { GraphqlContext } from "../context.ts"
 import type { Resolvers } from "../generated/resolvers-types.ts"
-import { mapPostgresError } from "../mapPostgresError.ts"
+import { GENERIC_ERROR_MESSAGE } from "../mapPostgresError.ts"
+import { throwMapped } from "../throwMapped.ts"
 import type { MembershipRow, ProfileRow } from "../rows.ts"
 
 const memberRole: Record<MembershipRow["role"], "OWNER" | "ADMIN" | "TEACHER" | "STUDENT"> = {
@@ -11,19 +12,18 @@ const memberRole: Record<MembershipRow["role"], "OWNER" | "ADMIN" | "TEACHER" | 
   student: "STUDENT",
 }
 
-function throwMapped(error: { code?: string }): never {
-  const mapped = mapPostgresError(error.code ?? "")
-  throw new GraphQLError(mapped.message, { extensions: mapped.extensions })
+function throwClientError(code: "UNAUTHENTICATED" | "INTERNAL"): never {
+  throw new GraphQLError(GENERIC_ERROR_MESSAGE, { extensions: { code } })
 }
 
 function requireUserId(userId: string | null): string {
-  if (!userId) throwMapped({ code: "28000" })
+  if (!userId) throwClientError("UNAUTHENTICATED")
   return userId
 }
 
 async function loadViewer(ctx: GraphqlContext, userId: string): Promise<ProfileRow> {
   const profile = await ctx.loaders.profileById.load(userId)
-  if (!profile) throwMapped({})
+  if (!profile) throwClientError("INTERNAL")
   return profile
 }
 
@@ -72,7 +72,7 @@ export const resolvers: Resolvers = {
         .select("*")
         .single()
       if (error) throwMapped(error)
-      if (!data) throwMapped({})
+      if (!data) throwClientError("INTERNAL")
       ctx.loaders.profileById.clear(userId).prime(userId, data)
       return data
     },
