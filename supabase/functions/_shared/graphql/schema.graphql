@@ -1,0 +1,36 @@
+enum MemberRole {
+  OWNER
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+type Company {
+  id: ID!
+  name: String!
+  isPersonal: Boolean!
+}
+
+type Membership {
+  id: ID!
+  role: MemberRole!
+  "Null when row policies hide the company."
+  company: Company
+}
+
+type Profile {
+  id: ID!
+  fullName: String!
+}
+
+"The signed-in user. Null when the bearer token is missing or invalid."
+type Viewer {
+  id: ID!
+  fullName: String!
+  profile: Profile!
+  memberships: [Membership!]!
+}
+
+type Query {
+  viewer: Viewer
+}

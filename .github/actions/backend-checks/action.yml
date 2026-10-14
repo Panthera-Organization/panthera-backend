@@ -42,11 +42,20 @@ runs:
           echo "No TypeScript files under supabase/functions"
           exit 1
         fi
-        deno check "${files[@]}"
+        deno check --config supabase/functions/deno.json "${files[@]}" scripts/dev-graphql.ts
 
     - name: Test the Postgres error map
       shell: bash
       run: deno test supabase/functions/_shared/graphql/mapPostgresError.test.ts
+
+    - name: Test viewer through Yoga
+      shell: bash
+      run: |
+        eval "$(supabase status -o env)"
+        export SUPABASE_URL="$API_URL"
+        export SUPABASE_ANON_KEY="$ANON_KEY"
+        deno test --config supabase/functions/deno.json --allow-net --allow-env \
+          supabase/functions/_shared/graphql/viewer.integration.test.ts
 
     - name: Stop local stack
       if: always()
