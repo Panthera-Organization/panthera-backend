@@ -1,0 +1,12 @@
+{
+  "nodeModulesDir": "none",
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.76.1",
+    "dataloader": "npm:dataloader@2.2.3",
+    "graphql": "npm:graphql@16.11.0",
+    "graphql-yoga": "npm:graphql-yoga@5.16.0"
+  },
+  "tasks": {
+    "dev-graphql": "deno run --allow-net --allow-env --allow-run scripts/dev-graphql.ts"
+  }
+}

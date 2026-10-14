@@ -1,6 +1,6 @@
 import { assertEquals } from "jsr:@std/assert"
-import { createClient } from "@supabase/supabase-js"
 import { graphqlResponse, yoga } from "./createYoga.ts"
+import { createUserClient } from "./userClient.ts"
 
 const VIEWER = `
   query {
@@ -46,9 +46,7 @@ function requireEnv(name: string): string {
 }
 
 async function signUp(fullName: string): Promise<string> {
-  const client = createClient(requireEnv("SUPABASE_URL"), requireEnv("SUPABASE_ANON_KEY"), {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
+  const client = createUserClient(requireEnv("SUPABASE_URL"), requireEnv("SUPABASE_ANON_KEY"))
   const email = `viewer-${crypto.randomUUID()}@test.panthera.local`
   const { data, error } = await client.auth.signUp({
     email,
@@ -60,10 +58,7 @@ async function signUp(fullName: string): Promise<string> {
 }
 
 async function createWorkspace(token: string, name: string): Promise<void> {
-  const client = createClient(requireEnv("SUPABASE_URL"), requireEnv("SUPABASE_ANON_KEY"), {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
+  const client = createUserClient(requireEnv("SUPABASE_URL"), requireEnv("SUPABASE_ANON_KEY"), token)
   const { error } = await client.rpc("create_personal_workspace", { p_name: name })
   if (error) throw new Error(error.message)
 }

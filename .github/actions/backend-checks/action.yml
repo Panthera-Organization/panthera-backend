@@ -42,11 +42,15 @@ runs:
           echo "No TypeScript files under supabase/functions"
           exit 1
         fi
-        deno check --config supabase/functions/deno.json "${files[@]}" scripts/dev-graphql.ts
+        deno check --config supabase/functions/deno.json "${files[@]}"
+        deno check scripts/dev-graphql.ts
 
     - name: Test the Postgres error map
       shell: bash
-      run: deno test supabase/functions/_shared/graphql/mapPostgresError.test.ts
+      run: |
+        deno test \
+          supabase/functions/_shared/graphql/mapPostgresError.test.ts \
+          supabase/functions/_shared/graphql/context.test.ts
 
     - name: Test viewer through Yoga
       shell: bash

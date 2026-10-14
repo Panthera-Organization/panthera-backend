@@ -1,7 +1,5 @@
-import { GraphQLError } from "graphql"
-import { GENERIC_ERROR_MESSAGE } from "../mapPostgresError.ts"
 import type { Resolvers } from "../generated/resolvers-types.ts"
-import type { MembershipRow, ProfileRow } from "../rows.ts"
+import type { MembershipRow } from "../rows.ts"
 
 const memberRole: Record<MembershipRow["role"], "OWNER" | "ADMIN" | "TEACHER" | "STUDENT"> = {
   owner: "OWNER",
@@ -20,13 +18,7 @@ export const resolvers: Resolvers = {
 
   Viewer: {
     fullName: (profile) => profile.full_name,
-    profile: async (profile, _args, ctx): Promise<ProfileRow> => {
-      const row = await ctx.loaders.profileById.load(profile.id)
-      if (!row) {
-        throw new GraphQLError(GENERIC_ERROR_MESSAGE, { extensions: { code: "NOT_FOUND" } })
-      }
-      return row
-    },
+    profile: (profile) => profile,
     memberships: (profile, _args, ctx) => ctx.loaders.membershipsByUserId.load(profile.id),
   },
 

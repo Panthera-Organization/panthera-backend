@@ -1,9 +1,9 @@
-import { createClient } from "@supabase/supabase-js"
 import { GraphQLError } from "graphql"
-import type { Database } from "../db/database.types.ts"
 import { GENERIC_ERROR_MESSAGE } from "./mapPostgresError.ts"
 import { createLoaders, type Loaders } from "./loaders.ts"
 import type { UserClient } from "./rows.ts"
+import { createUserClient } from "./userClient.ts"
+import { userIdFromGetUser } from "./userId.ts"
 
 export type GraphqlContext = {
   supabase: UserClient
@@ -27,16 +27,10 @@ export async function createContext(request: Request): Promise<GraphqlContext> {
   }
 
   const token = bearerToken(request)
-  const supabase = createClient<Database>(url, anonKey, {
-    global: { headers: token ? { Authorization: `Bearer ${token}` } : {} },
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  })
+  const supabase = createUserClient(url, anonKey, token)
 
   let userId: string | null = null
-  if (token) {
-    const { data, error } = await supabase.auth.getUser(token)
-    if (!error && data.user) userId = data.user.id
-  }
+  if (token) userId = userIdFromGetUser(await supabase.auth.getUser(token))
 
   return {
     supabase,
