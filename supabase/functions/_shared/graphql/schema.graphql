@@ -14,6 +14,7 @@ type Company {
 type Membership {
   id: ID!
   role: MemberRole!
+  canTeach: Boolean!
   "Null when row policies hide the company."
   company: Company
 }
@@ -21,6 +22,7 @@ type Membership {
 type Profile {
   id: ID!
   fullName: String!
+  timezone: String!
 }
 
 "The signed-in user. Null when the bearer token is missing or invalid."
@@ -33,4 +35,18 @@ type Viewer {
 
 type Query {
   viewer: Viewer
+}
+
+input UpdateProfileInput {
+  fullName: String
+  timezone: String
+}
+
+input CreatePersonalWorkspaceInput {
+  name: String
+}
+
+type Mutation {
+  updateProfile(input: UpdateProfileInput!): Viewer!
+  createPersonalWorkspace(input: CreatePersonalWorkspaceInput!): Viewer!
 }

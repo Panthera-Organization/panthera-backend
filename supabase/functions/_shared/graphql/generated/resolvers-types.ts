@@ -8,6 +8,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -24,6 +25,10 @@ export type Company = {
   name: Scalars['String']['output'];
 };
 
+export type CreatePersonalWorkspaceInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type MemberRole =
   | 'ADMIN'
   | 'OWNER'
@@ -32,21 +37,44 @@ export type MemberRole =
 
 export type Membership = {
   __typename?: 'Membership';
+  canTeach: Scalars['Boolean']['output'];
   /** Null when row policies hide the company. */
   company?: Maybe<Company>;
   id: Scalars['ID']['output'];
   role: MemberRole;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createPersonalWorkspace: Viewer;
+  updateProfile: Viewer;
+};
+
+
+export type MutationCreatePersonalWorkspaceArgs = {
+  input: CreatePersonalWorkspaceInput;
+};
+
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
+};
+
 export type Profile = {
   __typename?: 'Profile';
   fullName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  timezone: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
   viewer?: Maybe<Viewer>;
+};
+
+export type UpdateProfileInput = {
+  fullName?: InputMaybe<Scalars['String']['input']>;
+  timezone?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The signed-in user. Null when the bearer token is missing or invalid. */
@@ -131,12 +159,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Company: ResolverTypeWrapper<CompanyRow>;
+  CreatePersonalWorkspaceInput: CreatePersonalWorkspaceInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   MemberRole: MemberRole;
   Membership: ResolverTypeWrapper<MembershipRow>;
+  Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<ProfileRow>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateProfileInput: UpdateProfileInput;
   Viewer: ResolverTypeWrapper<ProfileRow>;
 };
 
@@ -144,11 +175,14 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Company: CompanyRow;
+  CreatePersonalWorkspaceInput: CreatePersonalWorkspaceInput;
   ID: Scalars['ID']['output'];
   Membership: MembershipRow;
+  Mutation: {};
   Profile: ProfileRow;
   Query: {};
   String: Scalars['String']['output'];
+  UpdateProfileInput: UpdateProfileInput;
   Viewer: ProfileRow;
 };
 
@@ -160,15 +194,22 @@ export type CompanyResolvers<ContextType = GraphqlContext, ParentType extends Re
 };
 
 export type MembershipResolvers<ContextType = GraphqlContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
+  canTeach?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   company?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   role?: Resolver<ResolversTypes['MemberRole'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MutationResolvers<ContextType = GraphqlContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createPersonalWorkspace?: Resolver<ResolversTypes['Viewer'], ParentType, ContextType, RequireFields<MutationCreatePersonalWorkspaceArgs, 'input'>>;
+  updateProfile?: Resolver<ResolversTypes['Viewer'], ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'input'>>;
+};
+
 export type ProfileResolvers<ContextType = GraphqlContext, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = {
   fullName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  timezone?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -187,6 +228,7 @@ export type ViewerResolvers<ContextType = GraphqlContext, ParentType extends Res
 export type Resolvers<ContextType = GraphqlContext> = {
   Company?: CompanyResolvers<ContextType>;
   Membership?: MembershipResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Viewer?: ViewerResolvers<ContextType>;
