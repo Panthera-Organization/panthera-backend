@@ -20,6 +20,6 @@ if [ ! -f "$old" ] || [ ! -f "$new" ]; then
 fi
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-rule="${script_dir}/suppress-removal-of-deprecated-field.mjs"
+rule="${script_dir}/downgrade-deprecated-removal.mjs"
 
 exec npx --yes @graphql-inspector/cli@7.0.1 diff "$old" "$new" --rule "$rule"

@@ -9,10 +9,10 @@ const deprecatedRemoval = {
   INPUT_FIELD_REMOVED: "isInputFieldDeprecated",
 }
 
-export default function suppressRemovalOfDeprecatedField({ changes }) {
+export default function downgradeDeprecatedRemoval({ changes }) {
   return changes.map((change) => {
-    const flag = deprecatedRemoval[change.type]
-    if (!flag || change.criticality?.level !== "BREAKING" || !change.meta?.[flag]) {
+    const metaKey = deprecatedRemoval[change.type]
+    if (!metaKey || change.criticality?.level !== "BREAKING" || !change.meta?.[metaKey]) {
       return change
     }
     return {
