@@ -32,6 +32,17 @@ open_pr_number() {
     --jq '.[0].number // empty'
 }
 
+finish_when_schema_matches() {
+  echo "schema.graphql on app main matches the backend."
+  number=$(open_pr_number)
+  if [ -n "$number" ]; then
+    gh pr close "$number" \
+      --repo "$APP_REPO" \
+      --comment "schema.graphql on app main already matches panthera-backend ${BACKEND_SHA}."
+  fi
+  exit 0
+}
+
 pr_body() {
   cat <<EOF
 Updates \`schema.graphql\` from panthera-backend \`${BACKEND_SHA}\`.
@@ -48,14 +59,7 @@ else
 fi
 
 if cmp -s "$BACKEND_SCHEMA" "$base_copy"; then
-  echo "schema.graphql on app main matches the backend."
-  number=$(open_pr_number)
-  if [ -n "$number" ]; then
-    gh pr close "$number" \
-      --repo "$APP_REPO" \
-      --comment "schema.graphql on app main already matches panthera-backend ${BACKEND_SHA}."
-  fi
-  exit 0
+  finish_when_schema_matches
 fi
 
 git checkout -B "$BRANCH" origin/main
@@ -63,12 +67,11 @@ cp "$BACKEND_SCHEMA" "$APP_SCHEMA_PATH"
 git add -- "$APP_SCHEMA_PATH"
 
 if git diff --cached --quiet; then
-  echo "schema.graphql on app main matches the backend."
-  exit 0
+  finish_when_schema_matches
 fi
 
-login=$(gh api user --jq .login)
-user_id=$(gh api user --jq .id)
+user_json=$(gh api user --jq '[.login, (.id | tostring)] | @tsv')
+read -r login user_id <<< "$user_json"
 git config user.name "$login"
 git config user.email "${user_id}+${login}@users.noreply.github.com"
 

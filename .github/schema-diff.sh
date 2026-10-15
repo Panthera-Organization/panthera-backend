@@ -2,7 +2,8 @@
 # Compare an old GraphQL schema to a new one.
 # Exit 1 when the new schema contains a breaking change.
 # Dangerous changes are printed. They do not fail the command.
-# Removal of a field that is already @deprecated is dangerous.
+# Removal of a field, enum value, or input field that is already @deprecated is dangerous.
+# Removal of a type stays breaking.
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
@@ -18,4 +19,7 @@ if [ ! -f "$old" ] || [ ! -f "$new" ]; then
   exit 2
 fi
 
-exec npx --yes @graphql-inspector/cli@7.0.1 diff "$old" "$new" --rule suppressRemovalOfDeprecatedField
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+rule="${script_dir}/suppress-removal-of-deprecated-field.mjs"
+
+exec npx --yes @graphql-inspector/cli@7.0.1 diff "$old" "$new" --rule "$rule"

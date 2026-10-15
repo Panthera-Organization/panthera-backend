@@ -48,12 +48,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Diff schema.graphql against the base branch
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      - name: Diff schema.graphql against main
         run: |
           schema=supabase/functions/_shared/graphql/schema.graphql
-          git fetch origin "${{ github.base_ref }}"
+          git fetch origin main
           old="${RUNNER_TEMP}/schema.old.graphql"
-          git show "${BASE_SHA}:${schema}" > "$old"
+          git show "origin/main:${schema}" > "$old"
           bash .github/schema-diff.sh "$old" "$schema"
