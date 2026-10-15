@@ -51,6 +51,8 @@ jobs:
       - name: Publish schema.graphql
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
           APP_DIR: ${{ github.workspace }}/panthera-app
           APP_REPO: Panthera-Organization/panthera-app
           BACKEND_SCHEMA: ${{ github.workspace }}/supabase/functions/_shared/graphql/schema.graphql

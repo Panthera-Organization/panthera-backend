@@ -8,6 +8,7 @@ set -euo pipefail
 : "${BACKEND_SCHEMA:?}"
 : "${BACKEND_SHA:?}"
 : "${GH_TOKEN:?}"
+: "${APP_SLUG:?}"
 
 APP_SCHEMA_PATH="schema.graphql"
 BRANCH="bot/schema-snapshot"
@@ -70,10 +71,12 @@ if git diff --cached --quiet; then
   finish_when_schema_matches
 fi
 
-user_json=$(gh api user --jq '[.login, (.id | tostring)] | @tsv')
-read -r login user_id <<< "$user_json"
-git config user.name "$login"
-git config user.email "${user_id}+${login}@users.noreply.github.com"
+# GH_TOKEN is the app installation token. That token cannot call /user.
+# GITHUB_TOKEN can read the public bot user.
+bot_login="${APP_SLUG}[bot]"
+bot_id=$(GH_TOKEN="${GITHUB_TOKEN:?}" gh api "users/${bot_login}" --jq .id)
+git config user.name "$bot_login"
+git config user.email "${bot_id}+${bot_login}@users.noreply.github.com"
 
 git commit -m "$(cat <<EOF
 ${TITLE}
