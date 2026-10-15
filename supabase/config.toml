@@ -356,8 +356,11 @@ allow_dynamic_registration = false
 
 # Yoga accepts a missing token and resolves viewer to null.
 # The gateway must not reject that request before Yoga runs.
+# The API deploy reads the import map only from this function setting.
+# It does not read supabase/functions/deno.json on its own.
 [functions.graphql]
 verify_jwt = false
+import_map = "./functions/deno.json"
 
 [edge_runtime]
 enabled = true
