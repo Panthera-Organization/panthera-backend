@@ -7,6 +7,6 @@
     "graphql-yoga": "npm:graphql-yoga@5.16.0"
   },
   "tasks": {
-    "dev-graphql": "deno run --allow-net --allow-env --allow-run scripts/dev-graphql.ts"
+    "dev-graphql": "deno run --allow-net --allow-env --allow-read --allow-run scripts/dev-graphql.ts"
   }
 }
