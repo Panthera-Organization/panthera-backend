@@ -81,4 +81,4 @@ jobs:
             echo "No Edge Function entrypoints; skipping deploy."
             exit 0
           fi
-          supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF" --use-api
+          supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF"

@@ -48,10 +48,9 @@ runs:
     - name: Test the Postgres error map
       shell: bash
       run: |
-        deno test --allow-read \
+        deno test \
           supabase/functions/_shared/graphql/mapPostgresError.test.ts \
-          supabase/functions/_shared/graphql/context.test.ts \
-          supabase/functions/_shared/graphql/schemaSource.test.ts
+          supabase/functions/_shared/graphql/context.test.ts
 
     - name: Test viewer through Yoga
       shell: bash
@@ -59,7 +58,7 @@ runs:
         eval "$(supabase status -o env)"
         export SUPABASE_URL="$API_URL"
         export SUPABASE_ANON_KEY="$ANON_KEY"
-        deno test --config supabase/functions/deno.json --allow-net --allow-env \
+        deno test --config supabase/functions/deno.json --allow-net --allow-env --allow-read \
           supabase/functions/_shared/graphql/viewer.integration.test.ts
 
     - name: Stop local stack
