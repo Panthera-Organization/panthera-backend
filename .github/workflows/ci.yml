@@ -34,3 +34,24 @@ jobs:
       - name: Run database checks
         if: steps.scope.outputs.run == 'true'
         uses: ./.github/actions/backend-checks
+
+  schema:
+    name: schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Diff schema.graphql against main
+        run: |
+          schema=supabase/functions/_shared/graphql/schema.graphql
+          git fetch origin main
+          old="${RUNNER_TEMP}/schema.old.graphql"
+          git show "origin/main:${schema}" > "$old"
+          bash .github/schema-diff.sh "$old" "$schema"

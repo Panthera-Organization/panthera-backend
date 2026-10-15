@@ -1,0 +1,58 @@
+name: Publish schema
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-schema
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Require the GitHub App secrets
+        env:
+          APP_ID: ${{ secrets.PANTHERA_SCHEMA_APP_ID }}
+          APP_KEY: ${{ secrets.PANTHERA_SCHEMA_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "$APP_ID" ] || [ -z "$APP_KEY" ]; then
+            echo "Add PANTHERA_SCHEMA_APP_ID and PANTHERA_SCHEMA_APP_PRIVATE_KEY to this repository."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v5
+
+      # PB-104 removes the squash merge before the public release.
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          app-id: ${{ secrets.PANTHERA_SCHEMA_APP_ID }}
+          private-key: ${{ secrets.PANTHERA_SCHEMA_APP_PRIVATE_KEY }}
+          owner: Panthera-Organization
+          repositories: panthera-app
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@v5
+        with:
+          repository: Panthera-Organization/panthera-app
+          token: ${{ steps.app-token.outputs.token }}
+          path: panthera-app
+          fetch-depth: 0
+
+      - name: Publish schema.graphql
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_DIR: ${{ github.workspace }}/panthera-app
+          APP_REPO: Panthera-Organization/panthera-app
+          BACKEND_SCHEMA: ${{ github.workspace }}/supabase/functions/_shared/graphql/schema.graphql
+          BACKEND_SHA: ${{ github.sha }}
+        run: bash .github/publish-schema.sh
