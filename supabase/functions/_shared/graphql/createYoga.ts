@@ -1,7 +1,9 @@
 import { createSchema, createYoga, type YogaInitialContext } from "graphql-yoga"
-import schemaSource from "./schema.graphql" with { type: "text" }
 import { createContext, type GraphqlContext } from "./context.ts"
 import { resolvers } from "./resolvers/viewer.ts"
+
+// static_files in supabase/config.toml puts this file in the function bundle.
+const schemaSource = Deno.readTextFileSync(new URL("./schema.graphql", import.meta.url))
 
 export function createGraphqlYoga(options: { graphiql: boolean }) {
   return createYoga<YogaInitialContext, GraphqlContext>({

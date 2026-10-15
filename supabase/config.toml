@@ -361,6 +361,8 @@ allow_dynamic_registration = false
 [functions.graphql]
 verify_jwt = false
 import_map = "./functions/deno.json"
+# Yoga reads schema.graphql at startup. Only a Docker deploy bundles static files.
+static_files = [ "./functions/_shared/graphql/schema.graphql" ]
 
 [edge_runtime]
 enabled = true
