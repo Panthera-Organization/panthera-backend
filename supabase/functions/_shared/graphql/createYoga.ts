@@ -1,9 +1,7 @@
 import { createSchema, createYoga, type YogaInitialContext } from "graphql-yoga"
 import { createContext, type GraphqlContext } from "./context.ts"
 import { resolvers } from "./resolvers/viewer.ts"
-
-// The deploy bundler rejects `with { type: "text" }`.
-const schemaSource = Deno.readTextFileSync(new URL("./schema.graphql", import.meta.url))
+import { schemaSource } from "./schemaSource.ts"
 
 export function createGraphqlYoga(options: { graphiql: boolean }) {
   return createYoga<YogaInitialContext, GraphqlContext>({

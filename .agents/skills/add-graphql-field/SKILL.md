@@ -14,7 +14,7 @@ Yoga runs inside a Supabase Edge Function as the signed-in user. Postgres RLS de
 
 ## Steps
 
-1. Design and add the field to `schema.graphql`, following `references/schema-design.md`. Changes are additive only.
+1. Design and add the field to `schema.graphql`, following `references/schema-design.md`. Changes are additive only. Then make the string in `schemaSource.ts` identical. The deploy bundle imports that module. `schema.graphql` stays the authored schema.
 2. Run `npx graphql-codegen`. Add a `mappers` entry in `codegen.ts` if a new type maps to a DB row.
 3. Add DataLoaders for every nested field, using `references/dataloader-patterns.ts`.
 4. Write the resolver following `references/resolver-template.ts`.
